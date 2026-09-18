@@ -32,5 +32,5 @@ jobs:
       - name: Migrations
         # Opt-in: em push eh null -> pulado.
         if: ${{ inputs.run_migrations }}
-        run: echo "migrations rodadas"
+        run: cat migrations/*.sql
       - run: echo "deployado"
