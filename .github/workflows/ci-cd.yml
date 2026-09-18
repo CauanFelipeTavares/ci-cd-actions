@@ -1,0 +1,21 @@
+name: CI/CD
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python app.py
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    # Espera o clique em "Review deployments" -> Approve, no painel da Action.
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo "deployado"
