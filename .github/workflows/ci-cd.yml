@@ -13,13 +13,14 @@ on:
         type: boolean
         default: false
 
+# Em push, inputs eh null e vale a mensagem do commit (a que voce edita no
+# "Confirm merge"). Em workflow_dispatch vale a caixa marcada.
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      # Em push, inputs.skip_tests eh null -> o step roda.
-      - if: ${{ !inputs.skip_tests }}
+      - if: ${{ !inputs.skip_tests && !contains(github.event.head_commit.message || '', '[skip tests]') }}
         run: python app.py
 
   deploy:
@@ -30,7 +31,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Migrations
-        # Opt-in: em push eh null -> pulado.
-        if: ${{ inputs.run_migrations }}
+        if: ${{ inputs.run_migrations || contains(github.event.head_commit.message || '', '[run migrations]') }}
         run: echo "migrations rodadas"
       - run: echo "deployado"
