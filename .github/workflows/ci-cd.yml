@@ -8,6 +8,10 @@ on:
         description: "Pular os testes"
         type: boolean
         default: false
+      run_migrations:
+        description: "Rodar as migrations no deploy"
+        type: boolean
+        default: false
 
 jobs:
   test:
@@ -25,4 +29,8 @@ jobs:
     environment: production
     steps:
       - uses: actions/checkout@v4
+      - name: Migrations
+        # Opt-in: em push eh null -> pulado.
+        if: ${{ inputs.run_migrations }}
+        run: echo "migrations rodadas"
       - run: echo "deployado"
